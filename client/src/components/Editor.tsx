@@ -41,4 +41,4 @@ const EditorBox = () => {
         </div>
       );
     }
-export default EditorBox
+export default EditorBox;
