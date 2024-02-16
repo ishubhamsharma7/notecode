@@ -34,7 +34,6 @@ const EditorBox = () => {
            path={languageValue.name}
            defaultValue={examples[languageValue.id] || ''}
            defaultLanguage={languageValue.name}
-           //@ts-ignore
            options={config.options}
            beforeMount={handleEditorWillMount}
           />

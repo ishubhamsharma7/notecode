@@ -7,5 +7,5 @@ export interface Language {
 
 export const languageAtom = atom<Language>({
     key: "languageAtom",
-    default: {id:19,name:'javascript'}
+    default: {id:8,name:'html'}
 })
