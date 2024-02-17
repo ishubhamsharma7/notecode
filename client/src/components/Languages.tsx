@@ -1,4 +1,4 @@
-import { useSetRecoilState } from "recoil"
+import { useRecoilState } from "recoil"
 import config from "../config"
 
 import {
@@ -13,7 +13,7 @@ import { languageAtom,Language } from "../store/editor"
 
 const Languages = () => {
 
-  const setLanguage = useSetRecoilState<Language>(languageAtom)
+  const [language,setLanguage] = useRecoilState<Language>(languageAtom)
 
   const langaugeHandler = (languageId: number)=> {
     const selectedLanguage =   config.supportedLanguages.find(language => language.id === languageId)
@@ -23,7 +23,7 @@ const Languages = () => {
  
   return (
     <div>
-      <Select onValueChange={(value)=>langaugeHandler(parseInt(value))}  >
+      <Select defaultValue={language.id.toString()} onValueChange={(value)=>langaugeHandler(parseInt(value))}  >
         <SelectTrigger className="w-[200px] " >
           <SelectValue placeholder= "Select Language"/>
         </SelectTrigger>

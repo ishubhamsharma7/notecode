@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import config from '../config';
 import examples from '../config/examples';
 import { useRecoilValue } from 'recoil';
@@ -7,6 +7,8 @@ import { languageAtom } from '../store/editor';
 
 
 const EditorBox = () => {
+
+  
     const editorRef = useRef(null);
   
     const languageValue = useRecoilValue(languageAtom)
@@ -20,13 +22,17 @@ const EditorBox = () => {
       });
     }
 
+    function handleEditorDidMount(editor: any) {
+      editorRef.current = editor;
+    }
+
       function showValue() {
         //@ts-ignore
-        alert(editorRef.current?.getValue())
+        // alert(editorRef.current?.getValue())
       }
     
       return (
-        <div className='bg-red-300'>
+        <div className='bg-red-300 '>
           <Editor
            theme='vs-dark'
            height="90vh"
@@ -35,7 +41,9 @@ const EditorBox = () => {
            defaultValue={examples[languageValue.id] || ''}
            defaultLanguage={languageValue.name}
            options={config.options}
+            // readOnly: true, //set when is editable is on
            beforeMount={handleEditorWillMount}
+           onMount={handleEditorDidMount}
           />
         </div>
       );

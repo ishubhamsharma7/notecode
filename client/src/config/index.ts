@@ -1,6 +1,6 @@
 interface Config {
   options: Object,
-  supportedLanguages: Array<Object>
+  supportedLanguages: Array<{id:number,name:string}>
 }
 
 const config:Config = {
@@ -11,100 +11,101 @@ const config:Config = {
       vertical: "hidden",
       horizontal: "hidden"
     },
+    // readOnly: true, //set when is editable is on
     overviewRulerBorder: false,
   },
 
   supportedLanguages: [
     {
-      "id": 1,
+      id: 1,
       "name": "c"
     },
     {
-      "id": 2,
+      id: 2,
       "name": "cpp"
     },
     {
-      "id": 3,
+      id: 3,
       "name": "csharp"
     },
     {
-      "id": 4,
+      id: 4,
       "name": "css"
     },
     {
-      "id": 5,
+      id: 5,
       "name": "dockerfile"
     },
     {
-      "id": 6,
+      id: 6,
       "name": "go"
     },
     {
-      "id": 7,
+      id: 7,
       "name": "graphql"
     },
     {
-      "id": 8,
+      id: 8,
       "name": "html"
     },
     {
-      "id": 9,
+      id: 9,
       "name": "java"
     },
     {
-      "id": 10,
+      id: 10,
       "name": "javascript"
     },
     {
-      "id": 11,
+      id: 11,
       "name": "json"
     },
     {
-      "id": 12,
+      id: 12,
       "name": "kotlin"
     },
     {
-      "id": 13,
+      id: 13,
       "name": "mysql"
     },
     {
-      "id": 14,
+      id: 14,
       "name": "pgsql"
     },
     {
-      "id": 15,
+      id: 15,
       "name": "php"
     },
     {
-      "id": 16,
+      id: 16,
       "name": "python"
     },
     {
-      "id": 17,
+      id: 17,
       "name": "r"
     },
     {
-      "id": 18,
+      id: 18,
       "name": "ruby"
     },
     {
-      "id": 19,
+      id: 19,
       "name": "rust"
     },
     {
-      "id": 20,
+      id: 20,
       "name": "sql"
     },
     {
-      "id": 21,
+      id: 21,
       "name": "typescript"
     },
     {
-      "id": 22,
+      id: 22,
       "name": "xml"
     },
     {
-      "id": 23,
+      id: 23,
       "name": "yaml"
     }
   ]
