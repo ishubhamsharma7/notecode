@@ -4,6 +4,7 @@ import config from '../config';
 import examples from '../config/examples';
 import { useRecoilValue } from 'recoil';
 import { languageAtom } from '../store/editor';
+import Languages from './Languages';
 
 
 const EditorBox = () => {
@@ -32,7 +33,7 @@ const EditorBox = () => {
       }
     
       return (
-        <div className='bg-red-300 '>
+        <div className='bg-red-300 flex h-full'>
           <Editor
            theme='vs-dark'
            height="90vh"
@@ -45,6 +46,7 @@ const EditorBox = () => {
            beforeMount={handleEditorWillMount}
            onMount={handleEditorDidMount}
           />
+        <Languages/>
         </div>
       );
     }

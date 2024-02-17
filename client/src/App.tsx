@@ -1,17 +1,29 @@
 
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import './App.css'
 import EditorBox  from './components/Editor'
-import Header from './components/Header'
-import Languages from './components/Languages'
+import Landing from './Landing'
 
 function App() {
 
+  const router = createBrowserRouter([
+    {
+      path:'/',
+      element : <Landing />,
+      children:[
+        {
+          path: "/editor",
+          element: <EditorBox/>,
+        },
+      ]
+    },
+  ])
+
   return (
     <>
-      <Header/>
-      <EditorBox/>
-      <Languages/>
+      <RouterProvider router={router} />
     </>
+
   )
 }
 
