@@ -5,7 +5,6 @@ import examples from '../config/examples';
 import { useRecoilValue } from 'recoil';
 import { languageAtom } from '../store/editor';
 import Languages from './Languages';
-import { Button } from './Button';
 import Compiler from './Compiler';
 
 

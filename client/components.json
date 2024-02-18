@@ -12,6 +12,6 @@
   },
   "aliases": {
     "components": "src/shadUI",
-    "utils": "src/lib"
+    "utils": "../../lib/"
   }
 }

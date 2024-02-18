@@ -1,23 +1,30 @@
 
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import './App.css'
-import EditorBox  from './components/Editor'
-import Landing from './Landing'
-
-function App() {
+import Landing from './pages/Landing'
+import Signin from './pages/Signin'
+import Signup from './pages/Signup'
 
   const router = createBrowserRouter([
     {
       path:'/',
-      element : <Landing />,
-      children:[
-        {
-          path: "/editor",
-          element: <EditorBox/>,
-        },
-      ]
+      element: <Navigate to={'/signin'}/> ,
     },
+    {
+      path:'/signin',
+      element: <Signin/>,
+    },
+    {
+      path:'/signup',
+      element: <Signup/>
+    },
+    {
+      path:'/editor',
+      element : <Landing />,
+      
+    }
   ])
+function App() {
 
   return (
     <>
