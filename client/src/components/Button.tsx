@@ -1,13 +1,11 @@
 
 interface ButtonProps {
     title:string;
-    style:string
+    style:string;
+    buttonType?:  'button'| 'submit' 
 }
 
-export const Button = ({title,style}:ButtonProps) => {
-  return (
-    <div>
-        <button type="button" className={style} >{title}</button>
-    </div>
-  )
+export const Button = ({title,style,buttonType}:ButtonProps) => {
+  return <button type={buttonType} className={style}  >{title}</button>
+   
 }
