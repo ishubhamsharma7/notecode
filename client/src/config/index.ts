@@ -1,6 +1,6 @@
 interface Config {
-  options: Object,
-  supportedLanguages: Array<{id:number,name:string}>
+  options: Object;
+  supportedLanguages: Array<{id:number,name:string}>;
 }
 
 const config:Config = {

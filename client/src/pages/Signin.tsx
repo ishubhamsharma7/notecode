@@ -1,11 +1,12 @@
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../components/Button'
 import Header from '../components/Header'
 import { Input } from '../shadUI/ui/input'
 import { useForm, SubmitHandler } from "react-hook-form"
 import {z} from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { v4 as uuid } from "uuid";
 
 const signinSchema = z.object({
   email: z.string().email({message:'Enter valid email'}),
@@ -14,9 +15,27 @@ const signinSchema = z.object({
 type UserInput = z.infer<typeof signinSchema>
 
 const Signin = () => {
+  const navigate = useNavigate();
   const { register, handleSubmit,formState: { errors,isSubmitting}} = useForm<UserInput>({resolver:zodResolver(signinSchema)})
 
-  const onSubmit: SubmitHandler<UserInput> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<UserInput> = (data) => {
+
+    console.log(data)
+
+    /// add login route of BE can route to /editor 
+    const unique_id = uuid();
+ 
+    // Get first 8 characters using slice
+    const small_id = unique_id.slice(0, 8);
+
+    //call editor Db and check user DB to check user
+
+
+
+    navigate(`/editor?id=${small_id}`)
+
+
+  }
 
   return (
     <div className='min-h-screen flex flex-col'>
