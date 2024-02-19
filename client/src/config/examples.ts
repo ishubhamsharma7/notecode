@@ -6,7 +6,7 @@ interface Example {
 }
 
 const examples:Example = {
-  1: rTabs(`
+  75: rTabs(`
     #include <stdio.h>
     int main() {
       // printf() displays the string inside quotation
@@ -14,7 +14,7 @@ const examples:Example = {
       return 0;
     }
   `),
-  2: rTabs(`
+  76: rTabs(`
     #include <iostream>
     #include <vector>
 
@@ -47,7 +47,7 @@ const examples:Example = {
       std::cout << "\n";
     }
   `),
-  3: rTabs(`
+  51: rTabs(`
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -114,7 +114,7 @@ const examples:Example = {
     RUN make /app
     CMD python /app/app.py
   `),
-  6: rTabs(`
+  95: rTabs(`
     package main
 
     import (
@@ -181,7 +181,7 @@ const examples:Example = {
       </body>
     </html>
   `),
-  9: rTabs(`
+  91: rTabs(`
     import java.util.ArrayList;
     import org.junit.Test;
 
@@ -196,7 +196,7 @@ const examples:Example = {
       }
      }
   `),
-  10: rTabs(`
+  93: rTabs(`
     const num1 = 5;
     const num2 = 3;
     
@@ -227,7 +227,7 @@ const examples:Example = {
       }
     }
   `),
-  12: rTabs(`
+  78: rTabs(`
     class MutableStack<E>(vararg items: E) {              // 1
 
       private val elements = items.toMutableList()
@@ -265,7 +265,7 @@ const examples:Example = {
           RAISE EXCEPTION 'employee % not unique', myname;
     END;
   `),
-  15: rTabs(`
+  68: rTabs(`
     <!DOCTYPE html>
     <html>
     <body>
@@ -279,7 +279,7 @@ const examples:Example = {
     </body>
     </html>
   `),
-  16: rTabs(`
+  71: rTabs(`
     # Python program to check if the number provided by the user is an Armstrong number or not
     # take input from the user
     num = int(input("Enter a number: "))
@@ -297,7 +297,7 @@ const examples:Example = {
     else:
        print(num,"is not an Armstrong number")
   `),
-  17: rTabs(`
+  80: rTabs(`
     # Program to convert decimal number into binary number using recursive function
     convert_to_binary <- function(n) {
       if(n > 1) {
@@ -306,7 +306,7 @@ const examples:Example = {
       cat(n %% 2)
     }
   `),
-  18: rTabs(`
+  72: rTabs(`
     def find_missing(sequence)
       consecutive     = sequence.each_cons(2)
       differences     = consecutive.map { |a,b| b - a }
@@ -317,7 +317,7 @@ const examples:Example = {
     find_missing([2,4,6,10])
     # 8
   `),
-  19: rTabs(`
+  73: rTabs(`
     struct Sheep { naked: bool, name: &'static str }
 
     trait Animal {
@@ -387,38 +387,21 @@ const examples:Example = {
       dolly.talk();
     }
   `),
-  20: rTabs(`
+  82: rTabs(`
     CREATE VIEW Failing_Students AS
     SELECT S_NAME, Student_ID
     FROM STUDENT
     WHERE GPA > 40;
   `),
-  21: rTabs(`
-    import * as React from 'react';
-    import { StandardProps } from '..';
-    import { TypographyProps } from '../Typography';
+  74: rTabs(`type Result = "pass" | "fail"
 
-    export interface ListItemTextProps
-      extends StandardProps<React.HTMLAttributes<HTMLDivElement>, ListItemTextClassKey> {
-      disableTypography?: boolean;
-      inset?: boolean;
-      primary?: React.ReactNode;
-      primaryTypographyProps?: Partial<TypographyProps>;
-      secondary?: React.ReactNode;
-      secondaryTypographyProps?: Partial<TypographyProps>;
-    }
-
-    export type ListItemTextClassKey =
-      | 'root'
-      | 'multiline'
-      | 'dense'
-      | 'inset'
-      | 'primary'
-      | 'secondary';
-
-    declare const ListItemText: React.ComponentType<ListItemTextProps>;
-
-    export default ListItemText;
+function verify(result: Result) {
+      if (result === "pass") {
+        console.log("Passed")
+      } else {
+        console.log("Failed")
+      }
+}
   `),
   22: rTabs(`
     <?xml version="1.0" encoding="ISO-8859-1"?>  

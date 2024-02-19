@@ -1,6 +1,6 @@
 interface Config {
   options: Object;
-  supportedLanguages: Array<{id:number,name:string}>;
+  supportedLanguages: Array<{id:number,name:string,compile:boolean}>;
 }
 
 const config:Config = {
@@ -17,96 +17,143 @@ const config:Config = {
 
   supportedLanguages: [
     {
-      id: 1,
-      "name": "c"
+      "id": 75,
+      "name": "c",
+      "compile":true
     },
     {
-      id: 2,
-      "name": "cpp"
+      "id": 76,
+      "name": "cpp",
+      "compile":true
+
     },
     {
-      id: 3,
-      "name": "csharp"
+      "id": 51,
+      "name": "csharp",
+      "compile":true
     },
     {
       id: 4,
-      "name": "css"
+      "name": "css",
+      "compile":false
     },
     {
       id: 5,
-      "name": "dockerfile"
+      "name": "dockerfile",
+      "compile":false
     },
     {
-      id: 6,
-      "name": "go"
+      "id": 95,
+      "name": "go",
+      "compile":true
     },
     {
       id: 7,
-      "name": "graphql"
+      "name": "graphql",
+      "compile":false
     },
     {
       id: 8,
-      "name": "html"
+      "name": "html",
+      "compile":false
     },
     {
-      id: 9,
-      "name": "java"
+      "id": 91,
+      "name": "java",
+      "compile":true
+
     },
     {
-      id: 10,
-      "name": "javascript"
+      "id": 93,
+      "name": "javascript",
+      "compile":true
+
     },
     {
       id: 11,
-      "name": "json"
+      "name": "json",
+      "compile":false
     },
     {
-      id: 12,
-      "name": "kotlin"
+      "id": 78,
+      "name": "kotlin",
+      "compile":true
+
+    },
+    {
+      "id": 85,
+      "name": "perl",
+      "compile":true
+
     },
     {
       id: 13,
-      "name": "mysql"
+      "name": "mysql",
+      "compile":false
     },
     {
       id: 14,
-      "name": "pgsql"
+      "name": "pgsql",
+      "compile":false
     },
     {
-      id: 15,
-      "name": "php"
+      "id": 68,
+      "name": "php",
+      "compile":true
+
     },
     {
-      id: 16,
-      "name": "python"
+      "id": 71,
+      "name": "python",
+      "compile":true
+
     },
     {
-      id: 17,
-      "name": "r"
+      "id": 80,
+      "name": "r",
+      "compile":true
+
     },
     {
-      id: 18,
-      "name": "ruby"
+      "id": 72,
+      "name": "ruby",
+      "compile":true
+
     },
     {
-      id: 19,
-      "name": "rust"
+      "id": 73,
+      "name": "rust",
+      "compile":true
+
     },
     {
-      id: 20,
-      "name": "sql"
+      "id": 82,
+      "name": "sql",
+      "compile":true
+
     },
     {
-      id: 21,
-      "name": "typescript"
+      "id": 83,
+      "name": "swift",
+      "compile":true
+
+    },
+    {
+      "id": 74,
+      "name": "typescript",
+      "compile":true
+
     },
     {
       id: 22,
-      "name": "xml"
+      "name": "xml",
+      "compile":false
     },
     {
       id: 23,
-      "name": "yaml"
+      "name": "yaml",
+      "compile":false
+
     }
   ]
 };
