@@ -30,11 +30,7 @@ const Signin = () => {
 
     //call editor Db and check user DB to check user
 
-
-
     navigate(`/editor?id=${small_id}`)
-
-
   }
 
   return (
