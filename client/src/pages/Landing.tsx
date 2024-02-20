@@ -9,9 +9,9 @@ const Landing = () => {
       <div>
         <Header />
         <ProtectedRoute>
-          <div className="flex flex-row"> {/* This will hold the sidebar and outlet side by side */}
+          <div className="flex flex-row">
             <Sidebar />
-            <div className="flex-1"> {/* This will allow the outlet to fill the remaining space */}
+            <div className="flex-1">
               <EditorBox/>
             </div>
           </div>

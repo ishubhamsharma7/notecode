@@ -121,16 +121,16 @@ const EditorBox = () => {
           <div className=' flex h-full bg-slate-200'>
             <div className='ml-2 mt-1 p-2 rounded shadow shadow-black bg-red-400 h-fit'>
               <Editor
-              theme='vs-dark'
-              height="93vh"
-              width="50vw"
-              path={languageValue.name}
-              defaultValue={examples[languageValue.id] || ''}
-              defaultLanguage={languageValue.name}
-              options={config.options}
-                // readOnly: true, //set when is editable is on
-              beforeMount={handleEditorWillMount}
-              onMount={handleEditorDidMount}
+                theme='vs-dark'
+                height="93vh"
+                width="50vw"
+                path={languageValue.name}
+                defaultValue={examples[languageValue.id] || ''}
+                defaultLanguage={languageValue.name}
+                options={config.options}
+                  // readOnly: true, //set when is editable is on
+                beforeMount={handleEditorWillMount}
+                onMount={handleEditorDidMount}
               />
             </div>
             <div className='flex flex-col'>
