@@ -1,18 +1,16 @@
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-// import 'dotenv/config'
 import * as dotenv from 'dotenv';
+import indexRoute from "./routes/index";
 dotenv.config({path:'../.env'});
 
-// dotenv.config() // Load the environment variables
 const app = express()
 
 app.use(bodyParser.json())
 app.use(cors())
 
-// console.log("-->,",process.env)
-
+app.use("/api/v1", indexRoute);
 app.get('/',(req,res)=>{
     res.send('Working fine')
 })
