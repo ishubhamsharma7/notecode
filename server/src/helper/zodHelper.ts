@@ -16,5 +16,10 @@ export interface User {
     fullName:string;
     email:string;
     password:string
- }
- 
+}
+
+export const resetPasswordSchema = z.object({
+    email: z.string().email(),
+    newPassword :z.string().min(5,{message:"Password must have 5 characters"}),
+    confirmPassword: z.string()
+})

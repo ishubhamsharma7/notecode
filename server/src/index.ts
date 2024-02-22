@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import * as dotenv from 'dotenv';
-import indexRoute from "./routes/index";
+import indexRoute from "./routes/index.routes";
 dotenv.config({path:'../.env'});
 
 const app = express()

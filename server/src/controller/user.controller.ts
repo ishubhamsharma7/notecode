@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { signinSchema, signupSchema } from "../helper/zodHelper";
+import { signinSchema, signupSchema, resetPasswordSchema } from "../helper/zodHelper";
 import prisma from "../helper/prismaClient";
-import { comparePassword, createUserToken, userHashedPassword } from "../services/user";
+import bcrypt from 'bcrypt'
+import { comparePassword, createUserToken, userHashedPassword } from "../services/user.service";
 
 export async function signupUser(req:Request,res:Response,next:NextFunction){
     const userDetails = req.body
@@ -53,3 +54,38 @@ export async function signinUser (req:Request,res:Response,next:NextFunction){
     }).status(200).json({message:"User logged in"})
     
 }  
+
+export async function resetPassword(req:Request,res:Response,next:NextFunction){
+
+    const userUpdatedPassword  = req.body
+
+    
+    const user = await prisma.user.findUnique({
+        where:{
+            email:userUpdatedPassword.email
+        }
+    })
+    
+    if(!user) return res.status(409).json({messgae:"User does not exists"})
+    
+    const parsedResetPassword = resetPasswordSchema.safeParse(userUpdatedPassword)
+    
+    if(!parsedResetPassword.success) return res.status(411).json({message:"Invalid user data"})
+    
+    if(userUpdatedPassword.confirmPassword !== userUpdatedPassword.newPassword) return res.status(409).json({message:"Password does not match"})
+    
+    
+    const userDataWithHashPassword = await bcrypt.hash(parsedResetPassword.data.newPassword,process.env.BCRYPT_SALT||10)
+
+    await prisma.user.update({
+        where:{
+            email: parsedResetPassword.data.email
+        },
+        data:{
+            password: userDataWithHashPassword
+        }
+    })
+
+    return res.status(200).json({message:"Password is updated. Please re-login"})
+
+}

@@ -1,6 +1,6 @@
 import express from "express";
-import userRoutes from './user'
-import editorRouter from './editor'
+import userRoutes from './user.routes'
+import editorRouter from './editor.routes'
 
 const router = express.Router();
 
