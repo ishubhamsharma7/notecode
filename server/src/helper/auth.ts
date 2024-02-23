@@ -23,6 +23,7 @@ declare module 'express-serve-static-core' {
 
 export default async function auth(req:Request,res:Response,next:NextFunction){
     const userTokenCookie = req.cookies.token;
+    
     if(!userTokenCookie) return res.status(403).json({message:"no token"});
 
     try {
