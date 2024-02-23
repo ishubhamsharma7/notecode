@@ -1,21 +1,15 @@
 import express,{ Request, Response } from "express";
-import { saveEditorDetails } from "../controller/editor.controller";
+import { createOrUpdateEditorDetails, getEditorDetails } from "../controller/editor.controller";
 import  auth from "../helper/auth";
 
 const router = express.Router();
 
 
 
-router.post('/save',auth,saveEditorDetails)
+router.post('/create',auth,createOrUpdateEditorDetails)
 
-// router.get('/bulk',async(req,res)=>{
-//     const filter = req.query.filter || ""
+router.get('/editor-detial',auth,getEditorDetails)
 
-    
-//     res.json({
-//        message:"hi"
-//     })
-// })
 
 
 export default router;

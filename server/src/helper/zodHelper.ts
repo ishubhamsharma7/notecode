@@ -23,3 +23,12 @@ export const resetPasswordSchema = z.object({
     newPassword :z.string().min(5,{message:"Password must have 5 characters"}),
     confirmPassword: z.string()
 })
+
+
+export const editorSaveSchema = z.object({
+    editorId: z.string(),
+    editable: z.boolean(),
+    codeData: z.string(),
+    languageId: z.number(),
+    userId:z.number()
+})
