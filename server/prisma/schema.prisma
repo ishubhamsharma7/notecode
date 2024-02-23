@@ -25,6 +25,9 @@ model Editor {
   id Int      @id @default(autoincrement())
   editorId String @unique
   editable Boolean
+  codeData String
+  languageId Int
+  shared Boolean @default(false)
   userId Int
   user User @relation(fields: [userId],references: [id])
 }

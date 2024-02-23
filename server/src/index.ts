@@ -3,12 +3,14 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import * as dotenv from 'dotenv';
 import indexRoute from "./routes/index.routes";
+import cookieParser from 'cookie-parser'
 dotenv.config({path:'../.env'});
 
 const app = express()
 
 app.use(bodyParser.json())
 app.use(cors())
+app.use(cookieParser())
 
 app.use("/api/v1", indexRoute);
 app.get('/',(req,res)=>{
