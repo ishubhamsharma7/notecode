@@ -1,9 +1,9 @@
 import Editor from '@monaco-editor/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import config from '../config';
 import examples from '../config/examples';
-import { useRecoilValue } from 'recoil';
-import { languageAtom } from '../store/editor';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { singleEditorAtom, languageAtom, Language, editAtom } from '../store/editor';
 import Languages from './Languages';
 import Compiler from './Compiler';
 import { Button } from './Button';
@@ -12,10 +12,34 @@ import axios from "axios";
 
 
 const EditorBox = () => {
+
+  const editorValues = useRecoilValue(singleEditorAtom)
+  const editorRef = useRef(null);
   
-    const editorRef = useRef(null);
+  const [isEditEnable,setIsEditEnable] = useRecoilState(editAtom)
+  const [languageValue,setLanguageValue] = useRecoilState(languageAtom)
   
-    const languageValue = useRecoilValue(languageAtom)
+  useEffect(()=>{
+    
+    const language = config.supportedLanguages.find((lang)=> lang.id == editorValues.languageId)
+    if(language?.id) setLanguageValue(language)
+    setIsEditEnable(editorValues.editable)
+    
+  },[])
+
+
+  const submitHandler = async() => {
+    // const editor  = await  axios(`http://localhost:3000/api/v1/editor/editor-detail?userId=2`,{withCredentials:true})
+    // const editor = await fetch({
+    //   url: `http://localhost:3000/api/v1/editor/editor-detail?userId=2`,
+    //   method: 'get',
+    //   withCredentials:true
+    // })
+
+    // console.log(editor)
+  }
+  
+   
     
     function handleEditorWillMount(monaco:any) {
       monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
@@ -30,90 +54,10 @@ const EditorBox = () => {
       editorRef.current = editor;
     }
 
-      function showValue() {
-        //@ts-ignore
-        // alert(editorRef.current?.getValue())
-      }
-
-      // console.log(process.env.REACT_APP_RAPID_API_URL + 'submissions')
-    
-      // const handleCompile = () => {
-      //   const formData = {
-      //     language_id: languageValue.id,
-      //     // encode source code in base64
-      //     //@ts-ignore
-      //     source_code: btoa(editorRef.current?.getValue()),
-      //   };
-      //   const options = {
-      //     method: "POST",
-      //     url: process.env.REACT_APP_RAPID_API_URL + 'submissions',
-      //     params: { base64_encoded: "true", fields: "*" },
-      //     headers: {
-      //       "content-type": "application/json",
-      //       "Content-Type": "application/json",
-      //       "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
-      //       "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY,
-      //     },
-      //     data: formData,
-      //   };
-    
-      //   axios
-      //     .request(options)
-      //     .then(function (response) {
-      //       console.log("res.data", response.data);
-      //       const token = response.data.token;
-      //       checkStatus(token);
-      //     })
-      //     .catch((err) => {
-      //       let error = err.response ? err.response.data : err;
-      //       // get error status
-      //       let status = err.response.status;
-      //       console.log("status", status);
-      //       if (status === 429) {
-      //         console.log("too many requests", status);
-    
-      //         // showErrorToast( `Quota of requests exceeded for the Day!`);
-      //       }
-      //       // setProcessing(false);
-      //       console.log("catch block...", error);
-      //     });
-      // };
-
-      // const checkStatus = async (token:any) => {
-      //   const options = {
-      //     method: "GET",
-      //     url: process.env.REACT_APP_RAPID_API_URL + "submissions/" + token,
-      //     params: { base64_encoded: "true", fields: "*" },
-      //     headers: {
-      //       "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
-      //       "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY,
-      //     },
-      //   };
-      //   try {
-      //     let response = await axios.request(options);
-      //     let statusId = response.data.status?.id;
-    
-      //     // Processed - we have a result
-      //     if (statusId === 1 || statusId === 2) {
-      //       // still processing
-      //       setTimeout(() => {
-      //         checkStatus(token);
-      //       }, 2000);
-      //       return;
-      //     } else {
-      //       // setProcessing(false);
-      //       // setOutputDetails(response.data);
-      //       // showSuccessToast(`Compiled Successfully!`);
-      //       console.log("response.data", response.data);
-      //       console.log("===>",atob(response.data.stdout))
-      //       return;
-      //     }
-      //   } catch (err) {
-      //     console.log("err", err);
-      //     // setProcessing(false);
-      //     // showErrorToast();
-      //   }
-      // };
+    function showValue() {
+      //@ts-ignore
+      // alert(editorRef.current?.getValue())
+    }
 
       
       return (
@@ -125,7 +69,7 @@ const EditorBox = () => {
                 height="93vh"
                 width="50vw"
                 path={languageValue.name}
-                defaultValue={examples[languageValue.id] || ''}
+                defaultValue={editorValues.codeData ? editorValues.codeData : examples[languageValue.id] || ''}
                 defaultLanguage={languageValue.name}
                 options={config.options}
                   // readOnly: true, //set when is editable is on
@@ -135,7 +79,7 @@ const EditorBox = () => {
             </div>
             <div className='flex flex-col'>
               <div className='ml-2 mt-1'>
-                <Languages placeholder='Select Language' />
+                <Languages placeholder='Select Language' editEnabled={isEditEnable}/>
               </div>
            
               <div>
@@ -159,7 +103,8 @@ const EditorBox = () => {
                   <Button title='Share' buttonType='button' style='text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2'/>
                 </div>
                 <div>
-                  <Button title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/>
+                  {/* <Button title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/> */}
+                  <button onClick={submitHandler}> Click me</button>
                   {/* <Button onClick={handleCompile} title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/> */}
                 </div>
               </div>

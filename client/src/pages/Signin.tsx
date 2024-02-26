@@ -7,30 +7,68 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import {z} from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { v4 as uuid } from "uuid";
+import axios from 'axios'
+import { useSetRecoilState } from 'recoil'
+import { userAtom } from '../store/user'
+import { singleEditorAtom } from '../store/editor'
+import {useCookies} from 'react-cookie'
 
 const signinSchema = z.object({
   email: z.string().email({message:'Enter valid email'}),
   password: z.string().min(5,{message:"Password must have 5 chars"})
 })
+
 type UserInput = z.infer<typeof signinSchema>
 
 const Signin = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit,formState: { errors,isSubmitting}} = useForm<UserInput>({resolver:zodResolver(signinSchema)})
+  const setAllEditorsData = useSetRecoilState(singleEditorAtom)
+  const setUserLoggedIn = useSetRecoilState(userAtom)
 
-  const onSubmit: SubmitHandler<UserInput> = (data) => {
+  const [cookie,setCookie] = useCookies(['token'])
 
-    console.log(data)
+  const { register, handleSubmit,formState: { errors,isSubmitting},setError} = useForm<UserInput>({resolver:zodResolver(signinSchema)})
 
-    /// add login route of BE can route to /editor 
-    const unique_id = uuid();
- 
-    // Get first 8 characters using slice
-    const small_id = unique_id.slice(0, 8);
+  const onSubmit: SubmitHandler<UserInput> = async (data) => {
+    try {
+      
+      const user = await axios.post('http://localhost:3000/api/v1/user/signin',{
+        email:data.email,
+        password:data.password     
+      },{withCredentials:true})
+      .then(res=>{
+        console.log(res.headers)
+      })
+      // .then(getEditorDetailForUser)    
+    } catch (error:any) {
+      setError("root",{
+        message:error.response.data.message
+      })
+    }
 
-    //call editor Db and check user DB to check user
+  }
 
-    navigate(`/editor?id=${small_id}`)
+  async function getEditorDetailForUser(userDetail:any){
+
+    try {
+        setUserLoggedIn(true)
+        const unique_id = uuid();
+        const small_id = unique_id.slice(0, 8);
+
+      if(!userDetail.data.data.id){
+          navigate(`/editor?id=${small_id}`)
+      }else{
+        const editor = await axios.get(`http://localhost:3000/api/v1/editor/editor-detail?userId=${userDetail.data.data.id}`,{withCredentials:true})
+        setAllEditorsData(editor.data)
+        const editorId = editor.data.editorId
+        navigate(`/editor?id=${editorId}`)
+      }
+    } catch (error:any) {
+      setError("root",{
+        message:error.response.data.message
+      })
+    }
+     
   }
 
   return (
@@ -73,11 +111,17 @@ const Signin = () => {
                   </div>
                 }
 
+                  {errors.root && 
+                    <div className='text-red-400 text-sm text-center pt-1  px-2'> 
+                      {errors.root.message}
+                    </div>
+                  }
                 <div className='flex justify-center'>
                   <Button 
                     title='Signin'
                     buttonType='submit'
                     style="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none font-medium rounded text-sm px-5 py-2.5 text-center w-64 mt-4"
+                    disabled = {isSubmitting}
                   />
                 </div>
               </form>

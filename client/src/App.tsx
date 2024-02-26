@@ -4,6 +4,7 @@ import './App.css'
 import Landing from './pages/Landing'
 import Signin from './pages/Signin'
 import Signup from './pages/Signup'
+import { Suspense } from 'react'
 
   const router = createBrowserRouter([
     {
@@ -28,7 +29,9 @@ function App() {
 
   return (
     <>
+    <Suspense fallback={<div>Loading .....</div>}>
       <RouterProvider router={router} />
+    </Suspense>
     </>
 
   )

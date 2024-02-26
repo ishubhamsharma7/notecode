@@ -3,10 +3,11 @@ interface ButtonProps {
     title:string;
     style:string;
     buttonType?:  'button'| 'submit';
-    onClick?: ()=>void
+    onClick?: ()=>void;
+    disabled?: boolean
 }
 
-export const Button = ({title,style,buttonType,onClick}:ButtonProps) => {
-  return <button type={buttonType} className={style} onClick={onClick} >{title}</button>
+export const Button = ({title,style,buttonType,onClick,disabled}:ButtonProps) => {
+  return <button type={buttonType} className={style} onClick={onClick} disabled={disabled}>{title}</button>
    
 }

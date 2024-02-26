@@ -16,6 +16,7 @@ model User {
   email   String   @unique
   password   String
   fullName  String
+  createdAt DateTime @default(now())
   editors Editor[]
 
 
@@ -29,5 +30,6 @@ model Editor {
   languageId Int
   shared Boolean @default(false)
   userId Int
+  createdAt DateTime @default(now())
   user User @relation(fields: [userId],references: [id])
 }

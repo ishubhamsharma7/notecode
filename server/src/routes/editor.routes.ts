@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/create',auth,createOrUpdateEditorDetails)
 
-router.get('/editor-detial',auth,getEditorDetails)
+router.get('/editor-detail',auth,getEditorDetails)
 
 
 

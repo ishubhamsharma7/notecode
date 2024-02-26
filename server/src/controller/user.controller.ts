@@ -45,13 +45,15 @@ export async function signinUser (req:Request,res:Response,next:NextFunction){
     
     const isPasswordMatched = await comparePassword(user.password,parsedSigninUser.data.password)
 
-    if(!isPasswordMatched) return res.status(403).json({messgae:"Enter correct password"})
+    if(!isPasswordMatched) return res.status(403).json({message:"Enter correct password"})
 
     const token = await createUserToken(user)
 
     return res.cookie("token",token,{
-        httpOnly:true
-    }).status(200).json({message:"User logged in"})
+        httpOnly:true,
+        sameSite:'none',
+        secure:true
+    }).json({message:"User logged in",data:{id:user.id,email:user.email}})
     
 }  
 

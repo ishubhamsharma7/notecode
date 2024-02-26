@@ -1,4 +1,4 @@
-import { useRecoilState } from "recoil"
+import { useRecoilState, useSetRecoilState } from "recoil"
 import config from "../config"
 
 import {
@@ -8,17 +8,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../shadUI/ui/select"
-import { languageAtom,Language } from "../store/editor"
+import { languageAtom,Language, editAtom } from "../store/editor"
 import { Switch } from "../shadUI/ui/switch"
 import { Label } from "../shadUI/ui/label"
 
 interface LanguageProps {
-  placeholder:string
+  placeholder:string,
+  editEnabled:boolean
 }
 
-const Languages = ({placeholder}:LanguageProps) => {
+const Languages = ({placeholder,editEnabled}:LanguageProps) => {
 
   const [language,setLanguage] = useRecoilState<Language>(languageAtom)
+  const setIsEditEnabled = useSetRecoilState(editAtom)
 
   const langaugeHandler = (languageId: number)=> {
     const selectedLanguage =   config.supportedLanguages.find(language => language.id === languageId)
@@ -50,7 +52,7 @@ const Languages = ({placeholder}:LanguageProps) => {
         </Select>
       </div>
       <div className="flex justify-center items-center space-x-2 ml-2 bg-indigo-300 rounded shadow-xl h-9 w-auto p-1 pr-2">
-        <Switch id="airplane-mode" />
+        <Switch id="airplane-mode" checked={editEnabled} onCheckedChange={()=>setIsEditEnabled(prev => !prev)}/>
         <Label htmlFor="airplane-mode">Allow Edit</Label>
     </div>
     </div>
