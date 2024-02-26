@@ -75,8 +75,7 @@ export async function resetPassword(req:Request,res:Response,next:NextFunction){
     if(!parsedResetPassword.success) return res.status(411).json({message:"Invalid user data"})
     
     if(userUpdatedPassword.confirmPassword !== userUpdatedPassword.newPassword) return res.status(409).json({message:"Password does not match"})
-    
-    
+     
     const userDataWithHashPassword = await bcrypt.hash(parsedResetPassword.data.newPassword,process.env.BCRYPT_SALT||10)
 
     await prisma.user.update({
@@ -90,4 +89,10 @@ export async function resetPassword(req:Request,res:Response,next:NextFunction){
 
     return res.status(200).json({message:"Password is updated. Please re-login"})
 
+}
+
+
+export async function getUserProfile(req:Request,res:Response,next:NextFunction){
+
+   return res.json({user:req.user})
 }

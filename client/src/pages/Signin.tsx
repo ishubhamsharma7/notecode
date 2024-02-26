@@ -36,10 +36,7 @@ const Signin = () => {
         email:data.email,
         password:data.password     
       },{withCredentials:true})
-      .then(res=>{
-        console.log(res.headers)
-      })
-      // .then(getEditorDetailForUser)    
+      .then(getEditorDetailForUser)    
     } catch (error:any) {
       setError("root",{
         message:error.response.data.message
@@ -51,7 +48,6 @@ const Signin = () => {
   async function getEditorDetailForUser(userDetail:any){
 
     try {
-        setUserLoggedIn(true)
         const unique_id = uuid();
         const small_id = unique_id.slice(0, 8);
 

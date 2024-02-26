@@ -11,7 +11,8 @@ import prisma from './prismaClient';
 
 export interface UserRequest {
     id:number;
-    email:string
+    email:string;
+    name:string
 }
 
 declare module 'express' {
@@ -41,7 +42,8 @@ export default async function auth(req:Request,res:Response,next:NextFunction){
             
             req.user = {
                 id: decoded.id,
-                email: decoded.email
+                email: decoded.email,
+                name: user.fullName
             }
             
             next()
