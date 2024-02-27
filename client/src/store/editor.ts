@@ -1,4 +1,5 @@
-import { atom } from "recoil";
+import axios from "axios";
+import { atom, atomFamily, selector, selectorFamily } from "recoil";
 
 export interface Language {
     id:number;
@@ -21,23 +22,31 @@ export const languageAtom = atom<Language>({
 })
 
 
-export const editorPageAtom = atom({
-    key: "editorPageAtom",
-    default:{
 
-    }
+export const singleEditorAtom = atomFamily({
+    key: "singleEditorAtom",
+    default:selectorFamily({
+        key:"singleEditorSelector",
+        get : (id:string) => async ({get})=>{
+            const editor = (await axios.get(`http://localhost:3000/api/v1/editor/editor-detail?userId=${id}`,{withCredentials:true})).data
+            return editor as SingleEditor
+        },
+    })
 })
 
-export const singleEditorAtom = atom<SingleEditor>({
-    key:"singleEditorAtom",
-    default:{
-        id: 1,
-        editorId: "22ed02d",
-        editable: false,
-        codeData: "const a=10",
-        languageId: 93,
-    }
-})
+// export const languageSelector = selector({
+//     key:"languageSelector",
+//     get : ({get})=>{
+//         const editorValues = get(singleEditorAtom)
+
+//     }
+// })
+
+// export const singleEditorAtom = atom<null | SingleEditor>({
+//     key:"singleEditorAtom",
+//     default:
+// })
+
 
 export const editAtom = atom({
     key:"editAtom",

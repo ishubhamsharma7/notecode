@@ -1,43 +1,27 @@
 import Editor from '@monaco-editor/react';
-import { useEffect, useRef, useState } from 'react';
+import {  useRef } from 'react';
 import config from '../config';
 import examples from '../config/examples';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { singleEditorAtom, languageAtom, Language, editAtom } from '../store/editor';
+import { useRecoilState } from 'recoil';
+import { singleEditorAtom, languageAtom, editAtom } from '../store/editor';
 import Languages from './Languages';
 import Compiler from './Compiler';
 import { Button } from './Button';
 import CompilerOutput from './CompilerOutput';
-import axios from "axios";
 
+interface EditorId{
+  editorId:string
+}
 
-const EditorBox = () => {
+const EditorBox = ({editorId}:EditorId) => {
 
-  const editorValues = useRecoilValue(singleEditorAtom)
+  const [editor,setEditor] = useRecoilState(singleEditorAtom(editorId))
+
+  // console.log("--->",editorValues)
   const editorRef = useRef(null);
   
   const [isEditEnable,setIsEditEnable] = useRecoilState(editAtom)
   const [languageValue,setLanguageValue] = useRecoilState(languageAtom)
-  
-  useEffect(()=>{
-    
-    const language = config.supportedLanguages.find((lang)=> lang.id == editorValues.languageId)
-    if(language?.id) setLanguageValue(language)
-    setIsEditEnable(editorValues.editable)
-    
-  },[])
-
-
-  const submitHandler = async() => {
-    // const editor  = await  axios(`http://localhost:3000/api/v1/editor/editor-detail?userId=2`,{withCredentials:true})
-    // const editor = await fetch({
-    //   url: `http://localhost:3000/api/v1/editor/editor-detail?userId=2`,
-    //   method: 'get',
-    //   withCredentials:true
-    // })
-
-    // console.log(editor)
-  }
   
    
     
@@ -69,7 +53,7 @@ const EditorBox = () => {
                 height="93vh"
                 width="50vw"
                 path={languageValue.name}
-                defaultValue={editorValues.codeData ? editorValues.codeData : examples[languageValue.id] || ''}
+                defaultValue={ examples[languageValue.id] || ''}
                 defaultLanguage={languageValue.name}
                 options={config.options}
                   // readOnly: true, //set when is editable is on
@@ -104,7 +88,6 @@ const EditorBox = () => {
                 </div>
                 <div>
                   {/* <Button title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/> */}
-                  <button onClick={submitHandler}> Click me</button>
                   {/* <Button onClick={handleCompile} title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/> */}
                 </div>
               </div>

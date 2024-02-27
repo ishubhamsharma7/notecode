@@ -9,9 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { v4 as uuid } from "uuid";
 import axios from 'axios'
 import { useSetRecoilState } from 'recoil'
-import { userAtom } from '../store/user'
 import { singleEditorAtom } from '../store/editor'
-import {useCookies} from 'react-cookie'
 
 const signinSchema = z.object({
   email: z.string().email({message:'Enter valid email'}),
@@ -22,21 +20,18 @@ type UserInput = z.infer<typeof signinSchema>
 
 const Signin = () => {
   const navigate = useNavigate();
-  const setAllEditorsData = useSetRecoilState(singleEditorAtom)
-  const setUserLoggedIn = useSetRecoilState(userAtom)
-
-  const [cookie,setCookie] = useCookies(['token'])
+  // const setAllEditorsData = useSetRecoilState(singleEditorAtom)
 
   const { register, handleSubmit,formState: { errors,isSubmitting},setError} = useForm<UserInput>({resolver:zodResolver(signinSchema)})
 
   const onSubmit: SubmitHandler<UserInput> = async (data) => {
     try {
-      
-      const user = await axios.post('http://localhost:3000/api/v1/user/signin',{
+      await axios.post('http://localhost:3000/api/v1/user/signin',{
         email:data.email,
         password:data.password     
       },{withCredentials:true})
-      .then(getEditorDetailForUser)    
+      navigate(`/editor`)
+      // .then(getEditorDetailForUser)    
     } catch (error:any) {
       setError("root",{
         message:error.response.data.message
@@ -45,27 +40,28 @@ const Signin = () => {
 
   }
 
-  async function getEditorDetailForUser(userDetail:any){
+  // async function getEditorDetailForUser(userDetail:any){
 
-    try {
-        const unique_id = uuid();
-        const small_id = unique_id.slice(0, 8);
+  //   try {
+  //       const unique_id = uuid();
+  //       const small_id = unique_id.slice(0, 8);
 
-      if(!userDetail.data.data.id){
-          navigate(`/editor?id=${small_id}`)
-      }else{
-        const editor = await axios.get(`http://localhost:3000/api/v1/editor/editor-detail?userId=${userDetail.data.data.id}`,{withCredentials:true})
-        setAllEditorsData(editor.data)
-        const editorId = editor.data.editorId
-        navigate(`/editor?id=${editorId}`)
-      }
-    } catch (error:any) {
-      setError("root",{
-        message:error.response.data.message
-      })
-    }
+  //     if(!userDetail.data.data.id){
+  //         navigate(`/editor?id=${small_id}`)
+  //     }else{
+  //       const editor = await axios.get(`http://localhost:3000/api/v1/editor/editor-detail?userId=${userDetail.data.data.id}`,{withCredentials:true})
+  //       // setAllEditorsData(editor.data)
+  //       const editorId = editor.data.editorId
+  //       navigate(`/editor?id=${editorId}`)
+  //     }
+  //   } catch (error:any) {
+
+  //     setError("root",{
+  //       message:error.response.data.message
+  //     })
+  //   }
      
-  }
+  // }
 
   return (
     <div className='min-h-screen flex flex-col'>

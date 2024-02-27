@@ -56,6 +56,23 @@ export async function getEditorDetails(req:Request,res:Response){
 }
 
 
+export async function getSingleEditorDetail(req:Request,res:Response){
+
+    const editorId = req.params.id
+
+    console.log(editorId)
+
+    const editorData = await prisma.editor.findUnique({
+        where:{
+            editorId
+        }
+    })
+
+    if(!editorData) return res.status(404).json({message:"No data found"})
+
+    return res.status(200).json(editorData)
+}
+
       // console.log(process.env.REACT_APP_RAPID_API_URL + 'submissions')
     
       // const handleCompile = () => {

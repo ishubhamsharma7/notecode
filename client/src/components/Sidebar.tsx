@@ -3,9 +3,10 @@ import { MdNoteAdd } from "react-icons/md";
 
 const Home = () => {
   
+  
   return (
     <section className="flex">
-      <div className={`bg-[#363535] h-full w-48 duration-500 text-gray-100 px-1 flex flex-col justify-between`}>
+      <div className={`bg-[#363535] h-[calc(100vh-35px)] w-48 text-gray-100 px-1 flex flex-col justify-between`}>
         <div>
           <div className="pt-4 p-1 border-b-2 border-white flex justify-between rounded">
             Add Editor <div><MdNoteAdd size={22} className="mr-2" /></div>
