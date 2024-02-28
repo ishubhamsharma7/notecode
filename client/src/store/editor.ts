@@ -18,7 +18,7 @@ export interface SingleEditor {
 
 export const languageAtom = atom<Language>({
     key: "languageAtom",
-    default: {id:8,name:'html'}
+    default: {id:8,name:'html',compile:false}
 })
 
 
@@ -28,25 +28,17 @@ export const singleEditorAtom = atomFamily({
     default:selectorFamily({
         key:"singleEditorSelector",
         get : (id:string) => async ({get})=>{
-            const editor = (await axios.get(`http://localhost:3000/api/v1/editor/editor-detail?userId=${id}`,{withCredentials:true})).data
-            return editor as SingleEditor
-        },
+            try {
+                const editor = (await axios.get(`http://localhost:3000/api/v1/editor/editor-detail?id=${id}`,{withCredentials:true})).data
+                return editor as SingleEditor
+            } catch (error) {
+                return null
+                console.log("===>",error)
+            }
+            
+        }
     })
 })
-
-// export const languageSelector = selector({
-//     key:"languageSelector",
-//     get : ({get})=>{
-//         const editorValues = get(singleEditorAtom)
-
-//     }
-// })
-
-// export const singleEditorAtom = atom<null | SingleEditor>({
-//     key:"singleEditorAtom",
-//     default:
-// })
-
 
 export const editAtom = atom({
     key:"editAtom",

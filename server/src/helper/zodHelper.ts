@@ -29,6 +29,5 @@ export const editorSaveSchema = z.object({
     editorId: z.string(),
     editable: z.boolean(),
     codeData: z.string(),
-    languageId: z.number(),
-    userId:z.number()
+    languageId: z.number()
 })

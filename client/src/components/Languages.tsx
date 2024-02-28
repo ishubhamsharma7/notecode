@@ -8,25 +8,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../shadUI/ui/select"
-import { languageAtom,Language, editAtom } from "../store/editor"
+import { languageAtom,Language, editAtom, SingleEditor } from "../store/editor"
 import { Switch } from "../shadUI/ui/switch"
 import { Label } from "../shadUI/ui/label"
 
 interface LanguageProps {
   placeholder:string,
-  editEnabled:boolean
+  editEnabled:boolean;
+  langId?:number;
+  onLanguageChange: (value:number)=>void
 }
 
-const Languages = ({placeholder,editEnabled}:LanguageProps) => {
+const Languages = ({placeholder,editEnabled,langId,onLanguageChange}:LanguageProps) => {
 
-  const [language,setLanguage] = useRecoilState<Language>(languageAtom)
   const setIsEditEnabled = useSetRecoilState(editAtom)
 
-  const langaugeHandler = (languageId: number)=> {
-    const selectedLanguage =   config.supportedLanguages.find(language => language.id === languageId)
-
-    if(selectedLanguage) setLanguage(selectedLanguage)
-  } 
  
   return (
     <div className="flex items-center">
@@ -34,7 +30,7 @@ const Languages = ({placeholder,editEnabled}:LanguageProps) => {
         {placeholder}:
       </div>  
       <div>
-        <Select defaultValue={language.id.toString()} onValueChange={(value)=>langaugeHandler(parseInt(value))}  >
+        <Select defaultValue={langId ? langId.toString() : "93" } onValueChange={(value)=>onLanguageChange(parseInt(value))}  >
           <SelectTrigger className="w-[200px] " >
             <SelectValue placeholder= "Select Language"/>
           </SelectTrigger>

@@ -27,6 +27,7 @@ export async function createOrUpdateEditorDetails (req:Request,res:Response){
 
        return res.status(201).json(editor)
     }
+    editorDetails = {...editorDetails,userId:req.user?.id}
 
     await prisma.editor.create({ data:editorDetails })
 
@@ -37,11 +38,11 @@ export async function createOrUpdateEditorDetails (req:Request,res:Response){
 
 export async function getEditorDetails(req:Request,res:Response){
 
-    const userId = req.user?.id
+    const editorId = req.query.id
     
     const editorData = await prisma.editor.findFirst({
         where: {
-            userId
+            editorId :editorId as string
         },
         orderBy:{
             id:'asc'

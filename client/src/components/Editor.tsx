@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react';
-import {  useRef } from 'react';
+import {  useEffect, useRef, useState } from 'react';
 import config from '../config';
 import examples from '../config/examples';
 import { useRecoilState } from 'recoil';
@@ -14,35 +14,66 @@ interface EditorId{
 }
 
 const EditorBox = ({editorId}:EditorId) => {
+  // const [editor,setEditor] = useRecoilState(singleEditorAtom(editorId))
 
-  const [editor,setEditor] = useRecoilState(singleEditorAtom(editorId))
-
-  // console.log("--->",editorValues)
-  const editorRef = useRef(null);
+  // // console.log("--->",editorValues)
+  // const editorRef = useRef(null);
   
-  const [isEditEnable,setIsEditEnable] = useRecoilState(editAtom)
-  const [languageValue,setLanguageValue] = useRecoilState(languageAtom)
+  // const [isEditEnable,setIsEditEnable] = useRecoilState(editAtom)
+  // const [languageValue,setLanguageValue] = useRecoilState(languageAtom)
+  // // const [ed]
   
-   
-    
-    function handleEditorWillMount(monaco:any) {
-      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-        target: monaco.languages.typescript.ScriptTarget.Latest,
-        module: monaco.languages.typescript.ModuleKind.ES2015,
-        allowNonTsExtensions: true,
-        lib: ['es2018'],
-      });
-    }
+  //  useEffect(()=>{
+  //   console.log("=======called")
+  //   if(editor.languageId){
+  //     const selectedLanguage =   config.supportedLanguages.find(language => language.id === editor.languageId)
 
-    function handleEditorDidMount(editor: any) {
-      editorRef.current = editor;
-    }
+  //     if(selectedLanguage) setLanguageValue(selectedLanguage)
+  //   }
 
-    function showValue() {
-      //@ts-ignore
-      // alert(editorRef.current?.getValue())
-    }
+  //   if(editor.editable) setIsEditEnable(editor.editable)
 
+  //  },[editor])
+  // const setCodehandler = (value) =>{
+  //   setCode(value)
+  // }
+  // 233ded
+  const [language,setlanguage] = useState(config.supportedLanguages[9])
+  // const [is]
+  
+  const [editorDetails ,setEditorDetails ] = useState({
+    codeData:"//some comments",
+    languageId: 76,
+    editable: true
+  })
+
+  const onLanguageChange = (langId:number) => {
+    const selectedLanguage =   config.supportedLanguages.find(language => language.id === langId)
+    setlanguage(selectedLanguage!)
+    setEditorDetails((prev)=>{
+      return {
+        ...prev,
+        languageId:langId,
+      }
+    })
+  }
+
+  const handleEditorChange = (value:any) => {
+    setEditorDetails((prev)=>{
+      return {
+        ...prev,
+        codeData:value,
+      }
+    })
+  };
+  
+
+   const onSaveHandler = () => {
+    //@ts-ignore
+
+    console.log("======>",editorDetails)
+
+   }
       
       return (
         <>
@@ -52,18 +83,17 @@ const EditorBox = ({editorId}:EditorId) => {
                 theme='vs-dark'
                 height="93vh"
                 width="50vw"
-                path={languageValue.name}
-                defaultValue={ examples[languageValue.id] || ''}
-                defaultLanguage={languageValue.name}
+                path={language.name}
                 options={config.options}
+                value={ editorDetails?.languageId ? editorDetails.codeData : examples[language.id]}
+                onChange={handleEditorChange}
+               
                   // readOnly: true, //set when is editable is on
-                beforeMount={handleEditorWillMount}
-                onMount={handleEditorDidMount}
               />
             </div>
             <div className='flex flex-col'>
               <div className='ml-2 mt-1'>
-                <Languages placeholder='Select Language' editEnabled={isEditEnable}/>
+                <Languages placeholder='Select Language' langId={editorDetails?.languageId} editEnabled={true} onLanguageChange={onLanguageChange}/>
               </div>
            
               <div>
@@ -81,13 +111,13 @@ const EditorBox = ({editorId}:EditorId) => {
 
               <div className='flex ml-2'>
                 <div>
-                  <Button title='Save' buttonType='button' style='text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2'/>
+                  <Button title='Save' buttonType='button' style='text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2' onClick={onSaveHandler}/>
                 </div>
                 <div> 
                   <Button title='Share' buttonType='button' style='text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2'/>
                 </div>
                 <div>
-                  {/* <Button title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/> */}
+                  {language.compile && <Button title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/>}
                   {/* <Button onClick={handleCompile} title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/> */}
                 </div>
               </div>
