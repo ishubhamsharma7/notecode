@@ -21,8 +21,6 @@ export const languageAtom = atom<Language>({
     default: {id:8,name:'html',compile:false}
 })
 
-
-
 export const singleEditorAtom = atomFamily<null | SingleEditor, string>({
     key: "singleEditorAtom",
     default:selectorFamily({

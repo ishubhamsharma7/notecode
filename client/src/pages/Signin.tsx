@@ -6,10 +6,8 @@ import { Input } from '../shadUI/ui/input'
 import { useForm, SubmitHandler } from "react-hook-form"
 import {z} from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { v4 as uuid } from "uuid";
+// import { v4 as uuid } from "uuid";
 import axios from 'axios'
-import { useSetRecoilState } from 'recoil'
-import { singleEditorAtom } from '../store/editor'
 
 const signinSchema = z.object({
   email: z.string().email({message:'Enter valid email'}),
@@ -20,7 +18,6 @@ type UserInput = z.infer<typeof signinSchema>
 
 const Signin = () => {
   const navigate = useNavigate();
-  // const setAllEditorsData = useSetRecoilState(singleEditorAtom)
 
   const { register, handleSubmit,formState: { errors,isSubmitting},setError} = useForm<UserInput>({resolver:zodResolver(signinSchema)})
 

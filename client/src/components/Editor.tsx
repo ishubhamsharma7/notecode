@@ -9,6 +9,9 @@ import Compiler from './Compiler';
 import { Button } from './Button';
 import CompilerOutput from './CompilerOutput';
 import { userAtom } from '../store/user';
+import { v4 as uuid } from "uuid";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { updateSharelink } from '../api/api';
 
 interface EditorId{
   editorId:string
@@ -18,10 +21,19 @@ const EditorBox = ({editorId}:EditorId) => {
   const [editorDetails ,setEditorDetails ] = useRecoilState(singleEditorAtom(editorId))
   const [language,setlanguage] = useRecoilState(languageAtom)
   const [isEditEnable,setIsEditEnable] = useRecoilState(editAtom)
-
+  const [copied,setCopied] = useState("") 
+  let timeId: NodeJS.Timer
   const userId = useRecoilValue(userAtom)?.id
   
    useEffect(()=>{
+    
+    if(copied){
+      timeId = setTimeout(() => {
+        setCopied('')
+      }, 2000)
+    }
+
+    
     if(editorDetails?.languageId){
       const selectedLanguage =   config.supportedLanguages.find(language => language.id === editorDetails.languageId)
 
@@ -29,8 +41,11 @@ const EditorBox = ({editorId}:EditorId) => {
     }
 
     if(editorDetails?.editable) setIsEditEnable(editorDetails.editable)
-
-   },[editorDetails])
+    
+    return () => {
+      clearTimeout(timeId as unknown as number)
+    }
+   },[editorDetails,copied])
 
   const onLanguageChange = (langId:number) => {
     const selectedLanguage =   config.supportedLanguages.find(language => language.id === langId)
@@ -81,12 +96,25 @@ const EditorBox = ({editorId}:EditorId) => {
     
   }
 
-  const shareHandler =  async() => {
-    // console.log( window.location.href)
-    const url = location.href;
+  const {mutate,isPending,isSuccess,isError} = useMutation({
+    mutationFn: updateSharelink,
+    onSuccess:(data)=>{
+      console.log("-->",data)
+      setCopied("Copied")
+    }
+  })
 
+  const shareHandler =  async() => {
+    const unique_id = uuid();
+    const small_id = unique_id.slice(0, 8);
+    const url = `${location.href}&sharedId=${small_id} ` ;
+    
+    const sendData = {...editorDetails,shareLink:url,shared:true}
+    mutate(sendData)
     navigator.clipboard.writeText(url);
   }
+
+  
 
   if(!editorDetails) {
     return <div>No Results found</div>
@@ -132,14 +160,25 @@ const EditorBox = ({editorId}:EditorId) => {
                 {
                   userId == editorDetails?.userId && 
                   <div> 
-                    <Button title='Share' buttonType='button' style='text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2' onClick={shareHandler}/>
+                    <Button title={isPending ? 'Generating Link':'Share'} buttonType='button' style='text-white bg-green-700  enabled:hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 disabled:opacity-75 ' 
+                            onClick={shareHandler} 
+                            disabled={isPending}
+                    />
                   </div>
                 }
+                
                 <div>
-                  {language.compile && <Button title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/>}
+                  {language.compile && 
+                    <Button title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '
+                    
+                    />
+                  }
                   {/* <Button onClick={handleCompile} title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/> */}
                 </div>
               </div>
+                {
+                  isSuccess && <div> {copied} </div> 
+                }
             </div>
           </div>
           
