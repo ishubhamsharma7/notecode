@@ -2,12 +2,13 @@ import Editor from '@monaco-editor/react';
 import {  useEffect, useRef, useState } from 'react';
 import config from '../config';
 import examples from '../config/examples';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { singleEditorAtom, languageAtom, editAtom } from '../store/editor';
 import Languages from './Languages';
 import Compiler from './Compiler';
 import { Button } from './Button';
 import CompilerOutput from './CompilerOutput';
+import { userAtom } from '../store/user';
 
 interface EditorId{
   editorId:string
@@ -18,6 +19,7 @@ const EditorBox = ({editorId}:EditorId) => {
   const [language,setlanguage] = useRecoilState(languageAtom)
   const [isEditEnable,setIsEditEnable] = useRecoilState(editAtom)
 
+  const userId = useRecoilValue(userAtom)?.id
   
    useEffect(()=>{
     if(editorDetails?.languageId){
@@ -61,11 +63,30 @@ const EditorBox = ({editorId}:EditorId) => {
     })
   }
 
-  const onSaveHandler = () => {
-    console.log("======>",editorDetails)
-
+  if(userId !== editorDetails?.userId && editorDetails?.editable == false){
+    config.options = {
+      overviewRulerLanes: 0,
+      hideCursorInOverviewRuler: true,
+      scrollbar:{
+        vertical: "hidden",
+        horizontal: "hidden"
+      },
+      readOnly: true, //set when is editable is on
+      overviewRulerBorder: false,
+    }
   }
 
+  const onSaveHandler = () => {
+    console.log("======>",editorDetails)
+    
+  }
+
+  const shareHandler =  async() => {
+    // console.log( window.location.href)
+    const url = location.href;
+
+    navigator.clipboard.writeText(url);
+  }
 
   if(!editorDetails) {
     return <div>No Results found</div>
@@ -73,8 +94,8 @@ const EditorBox = ({editorId}:EditorId) => {
   
       return (
         <>
-          <div className=' flex h-full bg-slate-200'>
-            <div className='ml-2 mt-1 p-2 rounded shadow shadow-black bg-red-400 h-fit'>
+          <div className=' flex h-[calc(100vh-35px)] bg-slate-200'>
+            <div className='ml-2 mt-1 p-2 rounded shadow shadow-black bg-red-400 '>
               <Editor
                 theme='vs-dark'
                 height="93vh"
@@ -84,20 +105,18 @@ const EditorBox = ({editorId}:EditorId) => {
                 value={ editorDetails?.languageId ? editorDetails.codeData : examples[language.id]}
                 onChange={handleEditorChange}
                 defaultLanguage={language.name}
-               
-                  // readOnly: true, //set when is editable is on
               />
             </div>
-            <div className='flex flex-col'>
+            <div className='flex flex-col  flex-grow'>
               <div className='ml-2 mt-1'>
-                <Languages placeholder='Select Language' langId={editorDetails?.languageId} onLanguageChange={onLanguageChange} edit={isEditEnable} onChangeHandler={toggleHandler}/>
+                <Languages placeholder='Select Language' langId={editorDetails?.languageId} onLanguageChange={onLanguageChange} edit={isEditEnable} onChangeHandler={toggleHandler} editorCreatorId={editorDetails?.userId}/>
               </div>
            
               <div>
                 <div className='ml-2 mt-2 font-bold'>
                     Output
                 </div>
-                <div className='ml-2 mt-2 h-80 w-[102%] bg-black shadow-lg rounded-md' >  
+                <div className='m-2 h-80  bg-black shadow-lg rounded-md' >  
                   <Compiler />
                 </div>
               </div>
@@ -110,9 +129,12 @@ const EditorBox = ({editorId}:EditorId) => {
                 <div>
                   <Button title='Save' buttonType='button' style='text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2' onClick={onSaveHandler}/>
                 </div>
-                <div> 
-                  <Button title='Share' buttonType='button' style='text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2'/>
-                </div>
+                {
+                  userId == editorDetails?.userId && 
+                  <div> 
+                    <Button title='Share' buttonType='button' style='text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2' onClick={shareHandler}/>
+                  </div>
+                }
                 <div>
                   {language.compile && <Button title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/>}
                   {/* <Button onClick={handleCompile} title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/> */}

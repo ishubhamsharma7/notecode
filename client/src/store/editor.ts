@@ -13,7 +13,7 @@ export interface SingleEditor {
     editable: boolean,
     codeData: string,
     languageId: number,
-    userId?: number,
+    userId: number,
 }
 
 export const languageAtom = atom<Language>({

@@ -9,16 +9,21 @@ import {
 } from "../shadUI/ui/select"
 import { Switch } from "../shadUI/ui/switch"
 import { Label } from "../shadUI/ui/label"
+import { useRecoilValue } from "recoil";
+import { userAtom } from "../store/user";
 
 interface LanguageProps {
   placeholder:string,
   langId?:number;
-  onLanguageChange: (value:number)=>void,
+  onLanguageChange: (value:number)=>void;
   edit?: boolean;
-  onChangeHandler:(value:any) => void
+  onChangeHandler:(value:any) => void;
+  editorCreatorId:number
 }
 
-const Languages = ({placeholder,langId,onLanguageChange,edit,onChangeHandler}:LanguageProps) => {
+const Languages = ({placeholder,langId,onLanguageChange,edit,onChangeHandler,editorCreatorId}:LanguageProps) => {
+
+  const userId = useRecoilValue(userAtom)?.id
  
   return (
     <div className="flex items-center">
@@ -43,10 +48,13 @@ const Languages = ({placeholder,langId,onLanguageChange,edit,onChangeHandler}:La
           </SelectContent>
         </Select>
       </div>
-      <div className="flex justify-center items-center space-x-2 ml-2 bg-indigo-300 rounded shadow-xl h-9 w-auto p-1 pr-2">
-        <Switch id="airplane-mode" checked={edit} onCheckedChange={(event) => onChangeHandler(event)}/>
-        <Label htmlFor="airplane-mode">Allow Edit</Label>
-    </div>
+      {
+        userId == editorCreatorId &&
+        <div className="flex justify-center items-center space-x-2 ml-2 bg-indigo-300 rounded shadow-xl h-9 w-auto p-1 pr-2">
+          <Switch id="airplane-mode" checked={edit} onCheckedChange={(event) => onChangeHandler(event)}/>
+          <Label htmlFor="airplane-mode">Allow Edit</Label>
+        </div>
+      }
     </div>
   )
 }
