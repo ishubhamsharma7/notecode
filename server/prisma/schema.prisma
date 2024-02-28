@@ -30,6 +30,8 @@ model Editor {
   languageId Int
   shared Boolean @default(false)
   userId Int
+  shareLink String?
+  linkExpired Boolean @default(false)
   createdAt DateTime @default(now())
   user User @relation(fields: [userId],references: [id])
 }

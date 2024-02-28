@@ -31,3 +31,13 @@ export const editorSaveSchema = z.object({
     codeData: z.string(),
     languageId: z.number()
 })
+
+export const updateSchema = z.object({
+    editorId: z.string(),
+    editable: z.boolean(),
+    codeData: z.string(),
+    languageId: z.number(),
+    shared: z.boolean().optional(),
+    shareLink: z.string().optional(),
+    linkExpired : z.boolean().optional()
+})
