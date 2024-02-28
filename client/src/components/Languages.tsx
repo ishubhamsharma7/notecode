@@ -1,4 +1,3 @@
-import { useRecoilState, useSetRecoilState } from "recoil"
 import config from "../config"
 
 import {
@@ -8,21 +7,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../shadUI/ui/select"
-import { languageAtom,Language, editAtom, SingleEditor } from "../store/editor"
 import { Switch } from "../shadUI/ui/switch"
 import { Label } from "../shadUI/ui/label"
 
 interface LanguageProps {
   placeholder:string,
-  editEnabled:boolean;
   langId?:number;
-  onLanguageChange: (value:number)=>void
+  onLanguageChange: (value:number)=>void,
+  edit?: boolean;
+  onChangeHandler:(value:any) => void
 }
 
-const Languages = ({placeholder,editEnabled,langId,onLanguageChange}:LanguageProps) => {
-
-  const setIsEditEnabled = useSetRecoilState(editAtom)
-
+const Languages = ({placeholder,langId,onLanguageChange,edit,onChangeHandler}:LanguageProps) => {
  
   return (
     <div className="flex items-center">
@@ -48,7 +44,7 @@ const Languages = ({placeholder,editEnabled,langId,onLanguageChange}:LanguagePro
         </Select>
       </div>
       <div className="flex justify-center items-center space-x-2 ml-2 bg-indigo-300 rounded shadow-xl h-9 w-auto p-1 pr-2">
-        <Switch id="airplane-mode" checked={editEnabled} onCheckedChange={()=>setIsEditEnabled(prev => !prev)}/>
+        <Switch id="airplane-mode" checked={edit} onCheckedChange={(event) => onChangeHandler(event)}/>
         <Label htmlFor="airplane-mode">Allow Edit</Label>
     </div>
     </div>

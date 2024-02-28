@@ -12,45 +12,28 @@ import CompilerOutput from './CompilerOutput';
 interface EditorId{
   editorId:string
 }
-
+// 233ded
 const EditorBox = ({editorId}:EditorId) => {
-  // const [editor,setEditor] = useRecoilState(singleEditorAtom(editorId))
+  const [editorDetails ,setEditorDetails ] = useRecoilState(singleEditorAtom(editorId))
+  const [language,setlanguage] = useRecoilState(languageAtom)
+  const [isEditEnable,setIsEditEnable] = useRecoilState(editAtom)
 
-  // // console.log("--->",editorValues)
-  // const editorRef = useRef(null);
   
-  // const [isEditEnable,setIsEditEnable] = useRecoilState(editAtom)
-  // const [languageValue,setLanguageValue] = useRecoilState(languageAtom)
-  // // const [ed]
-  
-  //  useEffect(()=>{
-  //   console.log("=======called")
-  //   if(editor.languageId){
-  //     const selectedLanguage =   config.supportedLanguages.find(language => language.id === editor.languageId)
+   useEffect(()=>{
+    if(editorDetails?.languageId){
+      const selectedLanguage =   config.supportedLanguages.find(language => language.id === editorDetails.languageId)
 
-  //     if(selectedLanguage) setLanguageValue(selectedLanguage)
-  //   }
+      if(selectedLanguage) setlanguage(selectedLanguage)
+    }
 
-  //   if(editor.editable) setIsEditEnable(editor.editable)
+    if(editorDetails?.editable) setIsEditEnable(editorDetails.editable)
 
-  //  },[editor])
-  // const setCodehandler = (value) =>{
-  //   setCode(value)
-  // }
-  // 233ded
-  const [language,setlanguage] = useState(config.supportedLanguages[9])
-  // const [is]
-  
-  const [editorDetails ,setEditorDetails ] = useState({
-    codeData:"//some comments",
-    languageId: 76,
-    editable: true
-  })
+   },[editorDetails])
 
   const onLanguageChange = (langId:number) => {
     const selectedLanguage =   config.supportedLanguages.find(language => language.id === langId)
     setlanguage(selectedLanguage!)
-    setEditorDetails((prev)=>{
+    setEditorDetails((prev:any)=>{
       return {
         ...prev,
         languageId:langId,
@@ -59,7 +42,7 @@ const EditorBox = ({editorId}:EditorId) => {
   }
 
   const handleEditorChange = (value:any) => {
-    setEditorDetails((prev)=>{
+    setEditorDetails((prev:any)=>{
       return {
         ...prev,
         codeData:value,
@@ -68,13 +51,26 @@ const EditorBox = ({editorId}:EditorId) => {
   };
   
 
-   const onSaveHandler = () => {
-    //@ts-ignore
+  const toggleHandler = (value:any) => {
+    setIsEditEnable(value)
+    setEditorDetails((prev:any)=>{
+      return {
+        ...prev,
+        editable: value,
+      }
+    })
+  }
 
+  const onSaveHandler = () => {
     console.log("======>",editorDetails)
 
-   }
-      
+  }
+
+
+  if(!editorDetails) {
+    return <div>No Results found</div>
+  }
+  
       return (
         <>
           <div className=' flex h-full bg-slate-200'>
@@ -87,13 +83,14 @@ const EditorBox = ({editorId}:EditorId) => {
                 options={config.options}
                 value={ editorDetails?.languageId ? editorDetails.codeData : examples[language.id]}
                 onChange={handleEditorChange}
+                defaultLanguage={language.name}
                
                   // readOnly: true, //set when is editable is on
               />
             </div>
             <div className='flex flex-col'>
               <div className='ml-2 mt-1'>
-                <Languages placeholder='Select Language' langId={editorDetails?.languageId} editEnabled={true} onLanguageChange={onLanguageChange}/>
+                <Languages placeholder='Select Language' langId={editorDetails?.languageId} onLanguageChange={onLanguageChange} edit={isEditEnable} onChangeHandler={toggleHandler}/>
               </div>
            
               <div>

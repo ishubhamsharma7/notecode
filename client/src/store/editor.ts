@@ -23,14 +23,14 @@ export const languageAtom = atom<Language>({
 
 
 
-export const singleEditorAtom = atomFamily({
+export const singleEditorAtom = atomFamily<null | SingleEditor, string>({
     key: "singleEditorAtom",
     default:selectorFamily({
         key:"singleEditorSelector",
         get : (id:string) => async ({get})=>{
             try {
                 const editor = (await axios.get(`http://localhost:3000/api/v1/editor/editor-detail?id=${id}`,{withCredentials:true})).data
-                return editor as SingleEditor
+                return editor
             } catch (error) {
                 return null
                 console.log("===>",error)
