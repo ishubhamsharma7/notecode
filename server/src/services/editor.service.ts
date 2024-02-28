@@ -4,13 +4,43 @@ import prisma from '../helper/prismaClient';
 
 
 export async function updateEditorData(editorDetails: z.infer< typeof updateSchema>){
-    await prisma.editor.update({
+   return await prisma.editor.update({
       where:{
          editorId : editorDetails.editorId
       },
-      data:editorDetails
+      data:editorDetails,
+      select:{
+         editable:true,
+         editorId:true,
+         userId:true,
+         languageId:true
+      }
    })
 
-   return { message: "Editor updated"}
+}
+
+export async function updateShareLinkData (editorDetails: z.infer< typeof updateSchema>,userId:number){
+   try {
+      return await prisma.editor.update({
+         where:{
+            editorId : editorDetails.editorId,
+            userId : userId
+         },
+         
+         data:editorDetails,
+         select:{
+            editable:true,
+            editorId:true,
+            userId:true,
+            languageId:true
+         }
+      })
+      
+   } catch (error) {
+     return {
+         editorId: null,
+         error: "Data not updated" 
+      }
+   }
 
 }

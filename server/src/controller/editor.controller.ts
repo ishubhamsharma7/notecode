@@ -1,13 +1,31 @@
 import { Request, Response } from "express";
 import prisma from "../helper/prismaClient";
-import { editorSaveSchema } from "../helper/zodHelper";
+import { editorSaveSchema, updateSchema } from "../helper/zodHelper";
 import { supportedLanguages } from "../helper/constants";
-import { updateEditorData } from "../services/editor.service";
+import { updateEditorData, updateShareLinkData } from "../services/editor.service";
 
 
 export async function createOrUpdateEditorDetails (req:Request,res:Response){
-        
     let editorDetails = req.body
+    // let 
+    // console.log(editorDetails)
+
+    const editorExists = await prisma.editor.findFirst({
+        where: {
+            editorId: editorDetails.data.editorId
+        }
+    })
+
+    if(editorExists && req.params.id) { 
+        let parsedEditorDetails = updateSchema.safeParse(editorDetails.data)
+
+        if(!parsedEditorDetails.success) return res.status(411).json({message:"Invalid editor data"})
+        
+        const editor = await updateEditorData(parsedEditorDetails.data)
+ 
+        return res.status(201).json({message:"Editor updated successfully",data:editor})
+    }
+
     let parsedEditorDetails = editorSaveSchema.safeParse(editorDetails)
     
     if(!parsedEditorDetails.success) return res.status(411).json({message:"Invalid editor data"})
@@ -16,17 +34,6 @@ export async function createOrUpdateEditorDetails (req:Request,res:Response){
 
     if(!isLanguageExists?.id) return res.status(411).json({message:"Invalid language id"})
 
-    const editorExists = await prisma.editor.findFirst({
-        where: {
-            editorId: parsedEditorDetails.data.editorId
-        }
-    })
-
-    if(editorExists) { 
-       const editor = await updateEditorData(editorDetails)
-
-       return res.status(201).json(editor)
-    }
     editorDetails = {...editorDetails,userId:req.user?.id}
 
     await prisma.editor.create({ data:editorDetails })
@@ -73,6 +80,24 @@ export async function getSingleEditorDetail(req:Request,res:Response){
 
     return res.status(200).json(editorData)
 }
+
+export async function updateSharedDetails(req:Request,res:Response){
+
+    const userId = req.user?.id
+    const editorDetails = req.body
+
+    let parsedEditorDetails = updateSchema.safeParse(editorDetails.data)
+
+        if(!parsedEditorDetails.success) return res.status(411).json({message:"Invalid editor data"})
+        
+        const editor = await updateShareLinkData(parsedEditorDetails.data,userId!)
+
+        if (editor?.editorId == null) return res.status(404).json({message:"Editor did not updated"}) 
+ 
+        return res.status(201).json({message:"Editor updated successfully",data:editor})
+
+}
+
 
       // console.log(process.env.REACT_APP_RAPID_API_URL + 'submissions')
     
