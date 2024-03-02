@@ -4,9 +4,14 @@ import bodyParser from 'body-parser'
 import * as dotenv from 'dotenv';
 import indexRoute from "./routes/index.routes";
 import cookieParser from 'cookie-parser'
+import morgan from 'morgan'
+
 dotenv.config({path:'../.env'});
 
 const app = express()
+
+
+app.use(morgan('dev'))
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:5173'

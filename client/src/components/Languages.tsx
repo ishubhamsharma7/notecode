@@ -7,8 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../shadUI/ui/select"
-import { Switch } from "../shadUI/ui/switch"
-import { Label } from "../shadUI/ui/label"
 import { useRecoilValue } from "recoil";
 import { userAtom } from "../store/user";
 
@@ -48,13 +46,13 @@ const Languages = ({placeholder,langId,onLanguageChange,edit,onChangeHandler,edi
           </SelectContent>
         </Select>
       </div>
-      {
+      {/* {
         userId == editorCreatorId &&
         <div className="flex justify-center items-center space-x-2 ml-2 bg-indigo-300 rounded shadow-xl h-9 w-auto p-1 pr-2">
           <Switch id="airplane-mode" checked={edit} onCheckedChange={(event) => onChangeHandler(event)}/>
           <Label htmlFor="airplane-mode">Allow Edit</Label>
         </div>
-      }
+      } */}
     </div>
   )
 }

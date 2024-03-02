@@ -41,3 +41,9 @@ export const updateSchema = z.object({
     shareLink: z.string().optional(),
     linkExpired : z.boolean().optional()
 })
+
+
+export const compileSchema = z.object({
+    code:z.string(),
+    languageId: z.number()
+})

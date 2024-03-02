@@ -11,7 +11,7 @@ import CompilerOutput from './CompilerOutput';
 import { userAtom } from '../store/user';
 import { v4 as uuid } from "uuid";
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { updateSharelink } from '../api/api';
+import { Compile, getCodeOutput, saveEditorData, updateSharelink } from '../api/api';
 
 interface EditorId{
   editorId:string
@@ -21,17 +21,18 @@ const EditorBox = ({editorId}:EditorId) => {
   const [editorDetails ,setEditorDetails ] = useRecoilState(singleEditorAtom(editorId))
   const [language,setlanguage] = useRecoilState(languageAtom)
   const [isEditEnable,setIsEditEnable] = useRecoilState(editAtom)
-  const [copied,setCopied] = useState("") 
+  // const [copied,setCopied] = useState("") 
+  const [compiledData, setCompiledData] = useState({description:"",output:"",time:"",memory:0})
+
   let timeId: NodeJS.Timer
   const userId = useRecoilValue(userAtom)?.id
-  
+
    useEffect(()=>{
-    
-    if(copied){
-      timeId = setTimeout(() => {
-        setCopied('')
-      }, 2000)
-    }
+    // if(copied){
+    //   timeId = setTimeout(() => {
+    //     setCopied('')
+    //   }, 2000)
+    // }
 
     
     if(editorDetails?.languageId){
@@ -45,7 +46,7 @@ const EditorBox = ({editorId}:EditorId) => {
     return () => {
       clearTimeout(timeId as unknown as number)
     }
-   },[editorDetails,copied])
+   },[editorDetails])
 
   const onLanguageChange = (langId:number) => {
     const selectedLanguage =   config.supportedLanguages.find(language => language.id === langId)
@@ -78,41 +79,59 @@ const EditorBox = ({editorId}:EditorId) => {
     })
   }
 
-  if(userId !== editorDetails?.userId && editorDetails?.editable == false){
-    config.options = {
-      overviewRulerLanes: 0,
-      hideCursorInOverviewRuler: true,
-      scrollbar:{
-        vertical: "hidden",
-        horizontal: "hidden"
-      },
-      readOnly: true, //set when is editable is on
-      overviewRulerBorder: false,
-    }
-  }
+  //ALLOW EDIT CASE PLEASE UNCOMMENT WHEN IN USE
 
-  const onSaveHandler = () => {
-    console.log("======>",editorDetails)
-    
-  }
+  // if(userId !== editorDetails?.userId && editorDetails?.editable == false){
+  //   config.options = {
+  //     overviewRulerLanes: 0,
+  //     hideCursorInOverviewRuler: true,
+  //     scrollbar:{
+  //       vertical: "hidden",
+  //       horizontal: "hidden"
+  //     },
+  //     readOnly: true, //set when is editable is on
+  //     overviewRulerBorder: false,
+  //   }
+  // }
 
-  const {mutate,isPending,isSuccess,isError} = useMutation({
-    mutationFn: updateSharelink,
-    onSuccess:(data)=>{
-      console.log("-->",data)
-      setCopied("Copied")
-    }
+  const { mutate:compile,isPending:compilingData } = useMutation({
+    mutationFn: getCodeOutput,
+    mutationKey: ['compile'],
+    onSuccess(data) {
+      setCompiledData(data)
+    },
+
   })
 
-  const shareHandler =  async() => {
-    const unique_id = uuid();
-    const small_id = unique_id.slice(0, 8);
-    const url = `${location.href}&sharedId=${small_id} ` ;
-    
-    const sendData = {...editorDetails,shareLink:url,shared:true}
-    mutate(sendData)
-    navigator.clipboard.writeText(url);
+  const compileCode = ({code,languageId}:Compile)=>{
+    compile({code,languageId})
+  } 
+
+ const { mutate,isPending} = useMutation({
+    mutationFn: saveEditorData,
+    mutationKey:['save'],
+  })
+  const onSaveHandler = () => {
+   mutate(editorDetails!)
   }
+
+  // const { mutate,isPending,isSuccess} = useMutation({
+  //   mutationFn: updateSharelink,
+  //   mutationKey:['share']
+  //   onSuccess:(data)=>{
+  //     setCopied("Copied")
+  //   }
+  // })
+
+  // const shareHandler =  async() => {
+  //   const unique_id = uuid();
+  //   const small_id = unique_id.slice(0, 8);
+  //   const url = `${location.href}&sharedId=${small_id} ` ;
+    
+  //   const sendData = {...editorDetails,shareLink:url,shared:true}
+  //   mutate(sendData)
+  //   navigator.clipboard.writeText(url);
+  // }
 
   
 
@@ -145,19 +164,23 @@ const EditorBox = ({editorId}:EditorId) => {
                     Output
                 </div>
                 <div className='m-2 h-80  bg-black shadow-lg rounded-md' >  
-                  <Compiler />
+                  <Compiler output={compiledData.output}/>
                 </div>
               </div>
 
               <div className='my-2 ml-2 h-40'>
-                <CompilerOutput/>
+                { compiledData?.description && <CompilerOutput description={compiledData.description} time={compiledData.time} memory={compiledData.memory} />}
               </div>
 
               <div className='flex ml-2'>
                 <div>
-                  <Button title='Save' buttonType='button' style='text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2' onClick={onSaveHandler}/>
+                  <Button title={isPending ? 'Saving': 'Save' } buttonType='button' style='text-white bg-blue-700 enabled:hover::bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2' 
+                    onClick={onSaveHandler}
+                    disabled={isPending}
+                  />
                 </div>
-                {
+                
+                {/* {
                   userId == editorDetails?.userId && 
                   <div> 
                     <Button title={isPending ? 'Generating Link':'Share'} buttonType='button' style='text-white bg-green-700  enabled:hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 disabled:opacity-75 ' 
@@ -165,20 +188,19 @@ const EditorBox = ({editorId}:EditorId) => {
                             disabled={isPending}
                     />
                   </div>
-                }
+                } */}
                 
                 <div>
                   {language.compile && 
-                    <Button title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '
-                    
+                    <Button title={compilingData ? 'Compiling and Executing' : 'Compile' } buttonType='button' style='text-white bg-gray-800 enabled:hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 disabled:opacity-75 '
+                      onClick={()=>compileCode({code: editorDetails.codeData,languageId:language.id})}
                     />
                   }
-                  {/* <Button onClick={handleCompile} title='Compile' buttonType='button' style='text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 '/> */}
                 </div>
               </div>
-                {
+                {/* {
                   isSuccess && <div> {copied} </div> 
-                }
+                } */}
             </div>
           </div>
           
