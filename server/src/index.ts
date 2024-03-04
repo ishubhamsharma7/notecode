@@ -14,7 +14,7 @@ const app = express()
 app.use(morgan('dev'))
 app.use(cors({
     credentials: true,
-    origin: 'https://notecode-alpha.vercel.app/'
+    origin: 'https://notecode-alpha.vercel.app'
 }))
 app.use(bodyParser.json())
 
