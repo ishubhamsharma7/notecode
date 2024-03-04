@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../shadUI/ui/select"
-import { useRecoilValue } from "recoil";
-import { userAtom } from "../store/user";
+// import { useRecoilValue } from "recoil";
+// import { userAtom } from "../store/user";
 
 interface LanguageProps {
   placeholder:string,
@@ -19,9 +19,9 @@ interface LanguageProps {
   editorCreatorId:number
 }
 
-const Languages = ({placeholder,langId,onLanguageChange,edit,onChangeHandler,editorCreatorId}:LanguageProps) => {
+const Languages = ({placeholder,langId,onLanguageChange}:LanguageProps) => {
 
-  const userId = useRecoilValue(userAtom)?.id
+  // const userId = useRecoilValue(userAtom)?.id
  
   return (
     <div className="flex items-center">

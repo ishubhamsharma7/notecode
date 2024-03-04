@@ -1,17 +1,17 @@
 import Editor from '@monaco-editor/react';
-import {  useEffect, useRef, useState } from 'react';
+import {  useEffect, useState } from 'react';
 import config from '../config';
 import examples from '../config/examples';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { singleEditorAtom, languageAtom, editAtom } from '../store/editor';
 import Languages from './Languages';
 import Compiler from './Compiler';
 import { Button } from './Button';
 import CompilerOutput from './CompilerOutput';
-import { userAtom } from '../store/user';
-import { v4 as uuid } from "uuid";
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Compile, getCodeOutput, saveEditorData, updateSharelink } from '../api/api';
+// import { userAtom } from '../store/user';
+// import { v4 as uuid } from "uuid";
+import { useMutation } from '@tanstack/react-query';
+import { Compile, getCodeOutput, saveEditorData } from '../api/api';
 
 interface EditorId{
   editorId:string
@@ -25,7 +25,7 @@ const EditorBox = ({editorId}:EditorId) => {
   const [compiledData, setCompiledData] = useState({description:"",output:"",time:"",memory:0})
 
   let timeId: NodeJS.Timer
-  const userId = useRecoilValue(userAtom)?.id
+  // const userId = useRecoilValue(userAtom)?.id
 
    useEffect(()=>{
     // if(copied){
@@ -168,7 +168,7 @@ const EditorBox = ({editorId}:EditorId) => {
                 </div>
               </div>
 
-              <div className='my-2 ml-2 h-40'>
+              <div className='my-2 ml-2 h-32'>
                 { compiledData?.description && <CompilerOutput description={compiledData.description} time={compiledData.time} memory={compiledData.memory} />}
               </div>
 

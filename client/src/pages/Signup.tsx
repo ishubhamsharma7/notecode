@@ -15,7 +15,7 @@ const signinSchema = z.object({
 type UserInput = z.infer<typeof signinSchema>
 
 const Signin = () => {
-  const { register, handleSubmit,formState: { errors,isSubmitting}} = useForm<UserInput>({resolver:zodResolver(signinSchema)})
+  const { register, handleSubmit,formState: { errors}} = useForm<UserInput>({resolver:zodResolver(signinSchema)})
 
   const onSubmit: SubmitHandler<UserInput> = (data) => {
     console.log(data)

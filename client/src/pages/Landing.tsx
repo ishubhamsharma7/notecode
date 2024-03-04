@@ -10,7 +10,7 @@ const Landing = () => {
         <Header />
         <ProtectedRoute>
           <div className="flex flex-row">
-            {/* <Sidebar /> */}
+            <Sidebar />
             <div className="flex-1">
               <EditorLandingPage/>
             </div>
