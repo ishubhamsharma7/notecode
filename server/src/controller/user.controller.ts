@@ -51,7 +51,7 @@ export async function signinUser (req:Request,res:Response,next:NextFunction){
 
     return res.cookie("token",token,{
         httpOnly:true,
-        sameSite:'strict',
+        sameSite:'none',
         secure:true
     }).json({message:"User logged in",data:{id:user.id,email:user.email}})
     
