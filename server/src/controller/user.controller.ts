@@ -52,7 +52,8 @@ export async function signinUser (req:Request,res:Response,next:NextFunction){
     return res.cookie("token",token,{
         httpOnly:true,
         sameSite:'lax',
-        secure:true
+        secure:true,
+        domain:"https://notecode-alpha.vercel.app"
     }).json({message:"User logged in",data:{id:user.id,email:user.email}})
     
 }  
