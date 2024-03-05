@@ -11,7 +11,7 @@ export interface User {
 const userSelector = selector({
   key: 'userSelector',
   get: async () => {
-    const response = await axios.get('https://notecode.onrender.com/api/v1/user/me',{withCredentials:true});
+    const response = await axios.get('http://localhost:3000/api/v1/user/me',{withCredentials:true});
     return response.data.user as User;
   },
 });

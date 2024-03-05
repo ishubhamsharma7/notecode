@@ -27,7 +27,7 @@ export const singleEditorAtom = atomFamily<null | SingleEditor, string>({
         key:"singleEditorSelector",
         get : (id:string) => async ({})=>{
             try {
-                const editor = (await axios.get(`https://notecode.onrender.com/api/v1/editor/editor-detail?id=${id}`,{withCredentials:true})).data
+                const editor = (await axios.get(`http://localhost:3000/api/v1/editor/editor-detail?id=${id}`,{withCredentials:true})).data
                 return editor
             } catch (error) {
                 return null
